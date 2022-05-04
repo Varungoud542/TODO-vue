@@ -1,5 +1,4 @@
 <script>
-
 // var vm = new Vue({
 //   data: {
 //       addNewToDo: "",
@@ -11,7 +10,7 @@
 //         this.$set(this.todos,index,this.addNewToDo)
 
 //       },
-//       addTodos() {
+//       submit() {
 //         this.todos.push(this.addNewToDo);
 //       },
 //     };
@@ -22,16 +21,24 @@ export default {
   data() {
     return {
       addNewToDo: "",
+      editIndex: -1,
       todos: ["clean dishes", "wash cloths", "watch tv", "learn vue"],
       deleteEvent: function (index) {
         this.todos.splice(index, 1);
       },
       editEvent: function (item, index) {
-        Vue.set(this.todos,index,this.addNewToDo)
-
+        this.addNewToDo = item;
+        this.editIndex = index;
       },
-      addTodos() {
-        this.todos.push(this.addNewToDo);
+      submit() {
+        if (this.editIndex > -1) {
+          Vue.set(this.todos, this.editIndex, this.addNewToDo);
+          this.editIndex = -1;
+          this.addNewToDo = "";
+        } else {
+          this.todos.push(this.addNewToDo);
+          this.addNewToDo = "";
+        }
       },
     };
   },
@@ -39,7 +46,7 @@ export default {
 </script>
 <template>
   <input v-model="addNewToDo" placeholder="ADD TODOS" />
-  <button @click="addTodos()">submit</button>
+  <button @click="submit()">submit</button>
   <h1 v-if="todos.length >= 1">TODO list:</h1>
   <ul>
     <ol v-for="(todo, index) in todos">
